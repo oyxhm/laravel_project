@@ -13,6 +13,11 @@ use Carbon\Carbon;
 class ArticleController extends Controller {
 
 	//
+	public function __construct()
+	{
+		// $this->middleware('auth',['only' => 'create']);
+	}
+
 	public function index()
 	{
 		// $articles = Article::all();
@@ -23,6 +28,8 @@ class ArticleController extends Controller {
 		// $articles = Article::latest('publish_at')->where('publish_at','>=',Carbon::now())->get();
 		// 涌scope
 		$articles = Article::latest('publish_at')->publish()->get();
+		// $user = \Auth::user();
+		// $articles = $user->articles;
 		return view('article.index',compact('articles'));
 		//return view('article.index')->with('articles',$articles);
 	}
@@ -51,8 +58,8 @@ class ArticleController extends Controller {
 		// $input = Request::all();
 		// $input['publish_at'] = Carbon::now();
 		// $this->validate($request,['title' => 'required|min:3','body'=>'required','publish_at' => 'required|date']);
-		$input = $request->all();
-		Article::create($input);
+		$article = new Article($request->all());
+		\Auth::user()->articles()->save($article);
 		return redirect('article');
 		// return $input;
 	}

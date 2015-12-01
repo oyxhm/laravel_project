@@ -36,4 +36,8 @@ Route::get('about','PageController@about');
 
 Route::get('article/test','ArticleController@test');
 
+Route::get('about',['middleware' => 'auth',function(){
+	return 'log in then show';
+}]);
+
 Route::resource('article','ArticleController');
