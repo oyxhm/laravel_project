@@ -34,11 +34,12 @@ class ArticleController extends Controller {
 		//return view('article.index')->with('articles',$articles);
 	}
 
-	public function show($id)
+	public function show(Article $article)
 	{
-		$article = Article::findOrFail($id);
+		// dd($id);# 返回文章
+		// $article = Article::findOrFail($id);
 		//dd($article->publish_at->diffForHumans());
-		return view('article.show')->with('q',$article);
+		return view('article.show',compact('article'));
 	}
 
 	public function create()
@@ -64,15 +65,15 @@ class ArticleController extends Controller {
 		// return $input;
 	}
 
-	public function edit($id)
+	public function edit(Article $article)
 	{
-		$article = Article::findOrFail($id);
+		// $article = Article::findOrFail($id);
 		return view('article.edit',compact('article'));
 	}
 
-	public function update($id,ArticleRequest $request)
+	public function update(Article $article,ArticleRequest $request)
 	{
-		$article = Article::findOrFail($id);
+		// $article = Article::findOrFail($id);
 		$article->update($request->all());
 		return redirect('article');
 	}
