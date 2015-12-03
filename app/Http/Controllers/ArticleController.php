@@ -16,6 +16,7 @@ class ArticleController extends Controller {
 	public function __construct()
 	{
 		// $this->middleware('auth',['only' => 'create']);
+		$this->middleware('auth',['except' => ['index','show']]);
 	}
 
 	public function index()
@@ -26,10 +27,10 @@ class ArticleController extends Controller {
 		// $articles = Article::latest('publish_at')->publish()->get();
 		// 不获取超过当前时间的文章 没用mutators
 		// $articles = Article::latest('publish_at')->where('publish_at','>=',Carbon::now())->get();
-		// 涌scope
-		$articles = Article::latest('publish_at')->publish()->get();
+		// 用scope
 		// $user = \Auth::user();
 		// $articles = $user->articles;
+		$articles = Article::latest('publish_at')->publish()->get();
 		return view('article.index',compact('articles'));
 		//return view('article.index')->with('articles',$articles);
 	}
@@ -44,7 +45,8 @@ class ArticleController extends Controller {
 
 	public function create()
 	{
-		return view('article.create');
+		$tags = \App\Tag::lists('name','id');
+		return view('article.create',compact('tags'));
 	}
 
 	public function test()
@@ -62,7 +64,10 @@ class ArticleController extends Controller {
 		// $article = new Article($request->all());
 		// \Session::flash('flash_message','文章发布成功');
 		// \Session::flash('flash_message_important',true);
-		\Auth::user()->articles()->create($request->all());
+		// dd($request->input('tags'));
+		// $article = \Auth::user()->articles()->create($request->all());
+		// $article->syncTags($request->input('tag_list'));
+		$this->createArticle($request);
 		flash('文章发布成功');
 		// flash()->success('文章发布成功');
 		return redirect('article');
@@ -76,13 +81,27 @@ class ArticleController extends Controller {
 	public function edit(Article $article)
 	{
 		// $article = Article::findOrFail($id);
-		return view('article.edit',compact('article'));
+		$tags = \App\Tag::lists('name','id');
+		return view('article.edit',compact('article','tags'));
 	}
 
 	public function update(Article $article,ArticleRequest $request)
 	{
 		// $article = Article::findOrFail($id);
 		$article->update($request->all());
+		$this->syncTags($article,$request->input('tag_list'));
 		return redirect('article');
+	}
+
+	private function syncTags(Article $article, array $tags)
+	{
+		$article->tags()->sync($tags);
+	}
+
+	public function createArticle(ArticleRequest $request)
+	{
+		$article = \Auth::user()->articles()->create($request->all());
+		$this->syncTags($article,$request->input('tag_list'));
+		return $article;
 	}
 }
