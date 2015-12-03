@@ -59,9 +59,17 @@ class ArticleController extends Controller {
 		// $input = Request::all();
 		// $input['publish_at'] = Carbon::now();
 		// $this->validate($request,['title' => 'required|min:3','body'=>'required','publish_at' => 'required|date']);
-		$article = new Article($request->all());
-		\Auth::user()->articles()->save($article);
+		// $article = new Article($request->all());
+		// \Session::flash('flash_message','文章发布成功');
+		// \Session::flash('flash_message_important',true);
+		\Auth::user()->articles()->create($request->all());
+		flash('文章发布成功');
+		// flash()->success('文章发布成功');
 		return redirect('article');
+		/*->with([
+			'flash_message' => '文章发布成功',
+			'flash_message_important' => true,
+			]);*/
 		// return $input;
 	}
 

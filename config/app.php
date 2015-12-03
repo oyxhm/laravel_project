@@ -135,7 +135,9 @@ return [
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
+		// add form
 		'Illuminate\Html\HtmlServiceProvider',
+
 
 		/*
 		 * Application Service Providers...
@@ -146,6 +148,8 @@ return [
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
 
+		// add flash
+		'Laracasts\Flash\FlashServiceProvider',
 	],
 
 	/*
@@ -193,8 +197,11 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
+		// add form and html facede
 		'Form'      => 'Illuminate\Html\FormFacade',
 		'Html'      => 'Illuminate\Html\HtmlFacade',
+		// add flash
+		'Flash'     => 'Laracasts\Flash\Flash',
 
 	],
 
